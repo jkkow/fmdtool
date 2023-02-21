@@ -23,7 +23,3 @@ class UlmSolver:
         w = np.sqrt(V * V - u * u)
         return jv(l - 1, u) / jv(l, u) + (w / u) * kv(l - 1, w) / kv(l, w)
 
-
-
-
-
