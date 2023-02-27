@@ -19,7 +19,8 @@ class WGFiber:
         return wrapper
 
 
-    def left_side_eigen_eq(self, l):
+    @classmethod
+    def left_side_eigen_eq(cls, l):
         def wrapper(u):
             return u*jv(l-1, u)/jv(l, u)
         return wrapper
@@ -39,7 +40,7 @@ class WGFiber:
         v = self.v
         offset1 = 0.000001 # Don't change this value
         offset2 = 0.5
-        lhs_eq_at_v = self.left_side_eigen_eq(l)(v)
+        lhs_eq_at_v = WGFiber.left_side_eigen_eq(l)(v)
         maxn = self.find_max_jn_zeros(l)
         if maxn == 0 :
             if lhs_eq_at_v > 0:
@@ -65,11 +66,23 @@ class WGFiber:
                 roots = fsolve(self.gen_eigen_eq(l), init_points)
             except RuntimeWarning as e:
                 print(f"RuntimeWarning: {e}")
-                print("The last solution is replaced by a number near V.")
+                print("The last solution is replaced by a value near V.")
                 roots = fsolve(self.gen_eigen_eq(l), init_points[:-1])
                 roots = np.append(roots, init_points[-1])
             finally:
                 return roots
+
+
+    def get_all_mode_set(self, l):
+        pass
+
+
+    @staticmethod
+    def get_cuttoff_value(l, m):
+        print(f"LP{l}{m}")
+        cutoff_test_func = WGFiber.left_side_eigen_eq(l)(v)
+    
+
         
 
 if __name__ == "__main__":
@@ -80,5 +93,7 @@ if __name__ == "__main__":
     print(f"Init-points to solve LP{l}m = {wgf.get_init_points_to_solve(l)}")
     print(f"roots for LP{l}m mode = {wgf.get_roots_for_u(l)}")
     print(type(wgf.get_roots_for_u(l)))
+    print(WGFiber.get_cuttoff_value(2,1))
+   
 
 

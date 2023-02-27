@@ -63,3 +63,18 @@ def test_get_roots_for_u():
     assert np.isclose(roots[1], 4.77191413)
     assert np.isclose(roots[-1], wgf.get_init_points_to_solve(l=0)[-1])
 
+    wgf = WGFiber(6.380)
+    assert np.size(wgf.get_roots_for_u(l=0)) == 2
+    assert np.size(wgf.get_roots_for_u(l=4)) == 1
+
+    wgf = WGFiber(7.016)
+    assert np.size(wgf.get_roots_for_u(l=0)) == 3
+    assert np.size(wgf.get_roots_for_u(l=2)) == 2
+
+    wgf = WGFiber(8.4174)
+    assert np.size(wgf.get_roots_for_u(l=0)) == 3
+    assert np.size(wgf.get_roots_for_u(l=1)) == 2
+    assert np.size(wgf.get_roots_for_u(l=2)) == 2
+    assert np.size(wgf.get_roots_for_u(l=3)) == 2
+
+
