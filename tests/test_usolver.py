@@ -32,6 +32,7 @@ def test_get_init_points_to_solve():
     assert wgf.get_init_points_to_solve(l=2) == None
     
     wgf = WGFiber(v=7.0)
+    assert any(x != None for x in wgf.get_init_points_to_solve(l=0))
     assert np.size(wgf.get_init_points_to_solve(l=0)) == 2
     assert np.size(wgf.get_init_points_to_solve(l=1)) == 2
     assert np.size(wgf.get_init_points_to_solve(l=2)) == 1
@@ -40,9 +41,25 @@ def test_get_init_points_to_solve():
     assert wgf.get_init_points_to_solve(l=5) == None
 
     wgf = WGFiber(v=7.02)
+    assert any(x != None for x in wgf.get_init_points_to_solve(l=0))
     assert np.size(wgf.get_init_points_to_solve(l=0)) == 3
     assert np.size(wgf.get_init_points_to_solve(l=1)) == 2
     assert np.size(wgf.get_init_points_to_solve(l=2)) == 2
     assert np.size(wgf.get_init_points_to_solve(l=3)) == 1
     assert np.size(wgf.get_init_points_to_solve(l=4)) == 1
     assert wgf.get_init_points_to_solve(l=5) == None
+
+
+def test_get_roots_for_u():
+    wgf = WGFiber(2.0)
+    roots = wgf.get_roots_for_u(l=0)
+    assert roots != None
+    assert np.isclose(roots[0], 1.52818403)
+    assert wgf.get_roots_for_u(l=1) == None
+
+    wgf = WGFiber(7.02)
+    roots = wgf.get_roots_for_u(l=0)
+    assert np.isclose(roots[0], 2.10071035)
+    assert np.isclose(roots[1], 4.77191413)
+    assert np.isclose(roots[-1], wgf.get_init_points_to_solve(l=0)[-1])
+

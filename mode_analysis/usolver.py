@@ -1,3 +1,4 @@
+import warnings
 import numpy as np
 from scipy.special import jv, kv, jn_zeros
 from scipy.optimize import fsolve
@@ -56,20 +57,28 @@ class WGFiber:
 
     def get_roots_for_u(self, l):
         init_points = self.get_init_points_to_solve(l)
-        try:
-            roots = fsolve(self.gen_eigen_eq(l), init_points)
-            return roots
-        except RuntimeError as e:
-            print(e)
-
+        if np.size(init_points) < 2 and init_points is None:
+            return None
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", RuntimeWarning)
+            try:
+                roots = fsolve(self.gen_eigen_eq(l), init_points)
+            except RuntimeWarning as e:
+                print(f"RuntimeWarning: {e}")
+                print("The last solution is replaced by a number near V.")
+                roots = fsolve(self.gen_eigen_eq(l), init_points[:-1])
+                roots = np.append(roots, init_points[-1])
+            finally:
+                return roots
         
 
-
-
 if __name__ == "__main__":
-    wgf = WGFiber(7.02)
-    print(wgf.left_side_eigen_eq(l=0)(wgf.v))
-    print(wgf.get_init_points_to_solve(l=0))
-    print(wgf.get_roots_for_u(l=0))
-    print(type(wgf.get_roots_for_u(l=0)))
+    v = 7.02
+    l = 0
+    wgf = WGFiber(v)
+    print(f"value at v of left-side = {wgf.left_side_eigen_eq(l)(wgf.v)} ")
+    print(f"Init-points to solve LP{l}m = {wgf.get_init_points_to_solve(l)}")
+    print(f"roots for LP{l}m mode = {wgf.get_roots_for_u(l)}")
+    print(type(wgf.get_roots_for_u(l)))
+
 
