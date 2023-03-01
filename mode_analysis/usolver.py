@@ -19,8 +19,7 @@ class WGFiber:
         return wrapper
 
 
-    @classmethod
-    def left_side_eigen_eq(cls, l):
+    def left_side_eigen_eq(self, l):
         def wrapper(u):
             return u*jv(l-1, u)/jv(l, u)
         return wrapper
@@ -40,7 +39,7 @@ class WGFiber:
         v = self.v
         offset1 = 0.000001 # Don't change this value
         offset2 = 0.5
-        lhs_eq_at_v = WGFiber.left_side_eigen_eq(l)(v)
+        lhs_eq_at_v = self.left_side_eigen_eq(l)(v)
         maxn = self.find_max_jn_zeros(l)
         if maxn == 0 :
             if lhs_eq_at_v > 0:
@@ -58,17 +57,20 @@ class WGFiber:
 
     def get_roots_for_u(self, l):
         init_points = self.get_init_points_to_solve(l)
+
         if np.size(init_points) < 2 and init_points is None:
             return None
+
         with warnings.catch_warnings():
             warnings.simplefilter("error", RuntimeWarning)
+
             try:
                 roots = fsolve(self.gen_eigen_eq(l), init_points)
             except RuntimeWarning as e:
                 print(f"RuntimeWarning: {e}")
-                print("The last solution is replaced by a value near V.")
                 roots = fsolve(self.gen_eigen_eq(l), init_points[:-1])
                 roots = np.append(roots, init_points[-1])
+                print("The last solution is replaced by a value near V.")
             finally:
                 return roots
 
@@ -78,22 +80,16 @@ class WGFiber:
 
 
     @staticmethod
-    def get_cuttoff_value(l, m):
-        print(f"LP{l}{m}")
-        cutoff_test_func = WGFiber.left_side_eigen_eq(l)(v)
-    
-
+    def get_lp_cutoff(l, m):
+        return jn_zeros(l-1, m)[-1]
         
 
 if __name__ == "__main__":
-    v = 7.02
-    l = 0
-    wgf = WGFiber(v)
-    print(f"value at v of left-side = {wgf.left_side_eigen_eq(l)(wgf.v)} ")
-    print(f"Init-points to solve LP{l}m = {wgf.get_init_points_to_solve(l)}")
-    print(f"roots for LP{l}m mode = {wgf.get_roots_for_u(l)}")
-    print(type(wgf.get_roots_for_u(l)))
-    print(WGFiber.get_cuttoff_value(2,1))
+    print(f"cutoff for LP01 = {WGFiber.get_cutoff_value('lp01')}")
+    print(f"cutoff for LP11 = {WGFiber.get_cutoff_value('lp11')}")
+    print(f"cutoff for LP21 = {WGFiber.get_cutoff_value('lp21')}")
+    print(f"cutoff for LP02 = {WGFiber.get_cutoff_value('lp02')}")
+    
    
 
 

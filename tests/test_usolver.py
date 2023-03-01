@@ -1,3 +1,4 @@
+from pytest import approx
 import numpy as np
 from scipy.special import jn_zeros
 from mode_analysis.usolver import WGFiber
@@ -78,3 +79,10 @@ def test_get_roots_for_u():
     assert np.size(wgf.get_roots_for_u(l=3)) == 2
 
 
+def test_get_cutoff_value():
+    # assert WGFiber.get_cutoff_value("lp01") == None
+    assert WGFiber.get_lp_cutoff(1,1) == jn_zeros(0,1)[-1]
+    assert WGFiber.get_lp_cutoff(2,1) == jn_zeros(1,1)[-1]
+    assert WGFiber.get_lp_cutoff(0,2) == jn_zeros(-1,2)[-1]
+    assert WGFiber.get_lp_cutoff(1,2) == jn_zeros(0,2)[-1]
+    assert WGFiber.get_lp_cutoff(3,1) == jn_zeros(2,1)[-1]
