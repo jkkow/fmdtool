@@ -77,6 +77,8 @@ def test_get_roots_for_u():
     assert np.size(wgf.get_roots_for_u(l=1)) == 2
     assert np.size(wgf.get_roots_for_u(l=2)) == 2
     assert np.size(wgf.get_roots_for_u(l=3)) == 2
+    assert np.size(wgf.get_roots_for_u(l=4)) == 1
+    assert np.size(wgf.get_roots_for_u(l=5)) == 1
 
 
 def test_get_cutoff_value():
@@ -86,3 +88,8 @@ def test_get_cutoff_value():
     assert WGFiber.get_lp_cutoff(0,2) == jn_zeros(-1,2)[-1]
     assert WGFiber.get_lp_cutoff(1,2) == jn_zeros(0,2)[-1]
     assert WGFiber.get_lp_cutoff(3,1) == jn_zeros(2,1)[-1]
+
+
+def test_get_all_mode_set():
+    wgf = WGFiber(2.0)
+    assert wgf.mode_set['u01'] == wgf.get_roots_for_u(0)[0]

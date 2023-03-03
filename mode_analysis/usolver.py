@@ -6,9 +6,9 @@ from scipy.optimize import fsolve
 
 class WGFiber:
 
-    def __init__(self, v=None):
-        if v is not None:
+    def __init__(self, v):
             self.v = v
+            self.mode_set = self.get_all_mode_set()
 
 
     def gen_eigen_eq(self, l):
@@ -19,11 +19,17 @@ class WGFiber:
         return wrapper
 
 
-    def left_side_eigen_eq(self, l):
+    @staticmethod
+    def left_side_eigen_eq(l):
         def wrapper(u):
             return u*jv(l-1, u)/jv(l, u)
         return wrapper
         
+    @staticmethod
+    def right_side_eigen_eq(v, l):
+        def wrapper(u):
+            w = np.sqrt(v*v - u*u)
+            return w*kv(l-1, w)/kv(l, w) 
 
     def find_max_jn_zeros(self, l):
         lo = 1
@@ -39,7 +45,7 @@ class WGFiber:
         v = self.v
         offset1 = 0.000001 # Don't change this value
         offset2 = 0.5
-        lhs_eq_at_v = self.left_side_eigen_eq(l)(v)
+        lhs_eq_at_v = WGFiber.left_side_eigen_eq(l)(v)
         maxn = self.find_max_jn_zeros(l)
         if maxn == 0 :
             if lhs_eq_at_v > 0:
@@ -75,8 +81,19 @@ class WGFiber:
                 return roots
 
 
-    def get_all_mode_set(self, l):
-        pass
+    def get_all_mode_set(self):
+        mode_set = {}
+        l = 0
+        roots = self.get_roots_for_u(l)
+
+        while roots is not None:
+
+            for m in range(np.size(roots)):
+                mode_set[f"u{l}{m+1}"] = roots[m]
+
+            l += 1
+            roots = self.get_roots_for_u(l)
+        return mode_set
 
 
     @staticmethod
@@ -85,7 +102,5 @@ class WGFiber:
         
 
 if __name__ == "__main__":
-    print(f"cutoff for LP01 = {WGFiber.get_cutoff_value('lp01')}")
-    print(f"cutoff for LP11 = {WGFiber.get_cutoff_value('lp11')}")
-    print(f"cutoff for LP21 = {WGFiber.get_cutoff_value('lp21')}")
-    print(f"cutoff for LP02 = {WGFiber.get_cutoff_value('lp02')}")
+    wgf = WGFiber(8.4174)
+    print(wgf.get_all_mode_set())
