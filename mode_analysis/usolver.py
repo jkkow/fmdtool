@@ -89,7 +89,3 @@ if __name__ == "__main__":
     print(f"cutoff for LP11 = {WGFiber.get_cutoff_value('lp11')}")
     print(f"cutoff for LP21 = {WGFiber.get_cutoff_value('lp21')}")
     print(f"cutoff for LP02 = {WGFiber.get_cutoff_value('lp02')}")
-    
-   
-
-
