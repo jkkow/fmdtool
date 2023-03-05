@@ -51,7 +51,3 @@ class LPModes(WGFiber):
         e_field_clad = fclad(u, r, phi)*is_clad(x,y)
         mode_filed = e_feild_core + e_field+clad
         return mode_field
-
-
-if __name__ == "__main__":
-
