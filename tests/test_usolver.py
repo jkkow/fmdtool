@@ -1,4 +1,4 @@
-from pytest import approx
+import pytest
 import numpy as np
 from scipy.special import jn_zeros
 from mode_analysis.usolver import WGFiber
@@ -90,6 +90,9 @@ def test_get_cutoff_value():
     assert WGFiber.get_lp_cutoff(3,1) == jn_zeros(2,1)[-1]
 
 
-def test_get_all_mode_set():
+def test_get_all_u_set():
     wgf = WGFiber(2.0)
-    assert wgf.mode_set['u01'] == wgf.get_roots_for_u(0)[0]
+    assert wgf.u_set['u01'] == wgf.get_roots_for_u(0)[0]
+    with pytest.raises(KeyError):
+        wgf.u_set['u11']
+        wgf.u_set['u21']

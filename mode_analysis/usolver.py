@@ -8,7 +8,7 @@ class WGFiber:
 
     def __init__(self, v):
             self.v = v
-            self.mode_set = self.get_all_mode_set()
+            self.u_set = self.get_all_u_set()
 
 
     def gen_eigen_eq(self, l):
@@ -81,19 +81,19 @@ class WGFiber:
                 return roots
 
 
-    def get_all_mode_set(self):
-        mode_set = {}
+    def get_all_u_set(self):
+        u_set = {}
         l = 0
         roots = self.get_roots_for_u(l)
 
         while roots is not None:
 
             for m in range(np.size(roots)):
-                mode_set[f"u{l}{m+1}"] = roots[m]
+                u_set[f"u{l}{m+1}"] = roots[m]
 
             l += 1
             roots = self.get_roots_for_u(l)
-        return mode_set
+        return u_set
 
 
     @staticmethod
@@ -103,4 +103,4 @@ class WGFiber:
 
 if __name__ == "__main__":
     wgf = WGFiber(8.4174)
-    print(wgf.get_all_mode_set())
+    print(wgf.get_all_u_set())
