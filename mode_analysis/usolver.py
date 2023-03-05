@@ -81,6 +81,7 @@ class WGFiber:
                 return roots
 
 
+
     def get_all_u_set(self):
         u_set = {}
         l = 0
@@ -94,6 +95,18 @@ class WGFiber:
             l += 1
             roots = self.get_roots_for_u(l)
         return u_set
+
+
+    def u_lm(self, l, m):
+        if l < 0 or not isinstance(l, int):
+            raise ValueError("'l' should be positive integers")
+        if m < 1 or not isinstance(m, int):
+            raise ValueError("'m' should be positive integers") 
+
+        try:
+            return self.u_set[f"u{l}{m}"]
+        except KeyError as e:
+            return None
 
 
     @staticmethod

@@ -96,3 +96,16 @@ def test_get_all_u_set():
     with pytest.raises(KeyError):
         wgf.u_set['u11']
         wgf.u_set['u21']
+
+
+def test_u_lm():
+    wgf = WGFiber(v=2.0)
+    assert wgf.u_lm(1,1) == None
+    with pytest.raises(ValueError):
+        wgf.u_lm(-1, 1)
+    with pytest.raises(ValueError):
+        wgf.u_lm(1, 0)
+    with pytest.raises(ValueError):
+        wgf.u_lm(2.1, 1)
+
+
