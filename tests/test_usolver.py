@@ -4,34 +4,33 @@ from scipy.special import jn_zeros
 from mode_analysis.usolver import WGFiber
 
 
-
 def test_find_max_jn_zeros():
     wgf = WGFiber(v=2.0)
     assert wgf.find_max_jn_zeros(l=0) == 0
     assert wgf.find_max_jn_zeros(l=1) == 0
- 
+
     wgf = WGFiber(v=2.6)
     assert wgf.find_max_jn_zeros(l=0) == 1
     assert wgf.find_max_jn_zeros(l=1) == 0
-    
+
     wgf = WGFiber(v=5.5)
     assert wgf.find_max_jn_zeros(l=0) == 1
     assert wgf.find_max_jn_zeros(l=1) == 1
     assert wgf.find_max_jn_zeros(l=2) == 1
 
-    
+
 def test_get_init_points_to_solve():
     wgf = WGFiber(v=2.0)
     assert wgf.get_init_points_to_solve(l=0) != None
     assert np.size(wgf.get_init_points_to_solve(l=0)) == 1
-    assert np.size(wgf.get_init_points_to_solve(l=1)) == 1 # 'None' is also counted.
+    assert np.size(wgf.get_init_points_to_solve(l=1)) == 1  # 'None' is also counted.
     assert wgf.get_init_points_to_solve(l=1) == None
-    
+
     wgf = WGFiber(v=2.406)
     assert wgf.get_init_points_to_solve(l=0) != None
     assert wgf.get_init_points_to_solve(l=1) != None
     assert wgf.get_init_points_to_solve(l=2) == None
-    
+
     wgf = WGFiber(v=7.0)
     assert any(x != None for x in wgf.get_init_points_to_solve(l=0))
     assert np.size(wgf.get_init_points_to_solve(l=0)) == 2
@@ -83,29 +82,27 @@ def test_get_roots_for_u():
 
 def test_get_cutoff_value():
     # assert WGFiber.get_cutoff_value("lp01") == None
-    assert WGFiber.get_lp_cutoff(1,1) == jn_zeros(0,1)[-1]
-    assert WGFiber.get_lp_cutoff(2,1) == jn_zeros(1,1)[-1]
-    assert WGFiber.get_lp_cutoff(0,2) == jn_zeros(-1,2)[-1]
-    assert WGFiber.get_lp_cutoff(1,2) == jn_zeros(0,2)[-1]
-    assert WGFiber.get_lp_cutoff(3,1) == jn_zeros(2,1)[-1]
+    assert WGFiber.get_lp_cutoff(1, 1) == jn_zeros(0, 1)[-1]
+    assert WGFiber.get_lp_cutoff(2, 1) == jn_zeros(1, 1)[-1]
+    assert WGFiber.get_lp_cutoff(0, 2) == jn_zeros(-1, 2)[-1]
+    assert WGFiber.get_lp_cutoff(1, 2) == jn_zeros(0, 2)[-1]
+    assert WGFiber.get_lp_cutoff(3, 1) == jn_zeros(2, 1)[-1]
 
 
-def test_get_all_u_set():
+def test_get_all_uset():
     wgf = WGFiber(2.0)
-    assert wgf.u_set['u01'] == wgf.get_roots_for_u(0)[0]
+    assert wgf.uset["u01"] == wgf.get_roots_for_u(0)[0]
     with pytest.raises(KeyError):
-        wgf.u_set['u11']
-        wgf.u_set['u21']
+        wgf.uset["u11"]
+        wgf.uset["u21"]
 
 
 def test_u_lm():
     wgf = WGFiber(v=2.0)
-    assert wgf.u_lm(1,1) == None
+    assert wgf.u_lm(1, 1) == None
     with pytest.raises(ValueError):
         wgf.u_lm(-1, 1)
     with pytest.raises(ValueError):
         wgf.u_lm(1, 0)
     with pytest.raises(ValueError):
         wgf.u_lm(2.1, 1)
-
-

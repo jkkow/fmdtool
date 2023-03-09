@@ -5,31 +5,31 @@ from scipy.optimize import fsolve
 
 
 class WGFiber:
-
     def __init__(self, v):
-            self.v = v
-            self.u_set = self.get_all_u_set()
-
+        self.v = v
+        self.uset = self.get_all_uset()
 
     def gen_eigen_eq(self, l):
         v = self.v
-        def wrapper(u):
-            w = np.sqrt(v*v - u*u)
-            return u*jv(l-1, u)/jv(l, u) + w*kv(l-1, w)/kv(l, w)
-        return wrapper
 
+        def wrapper(u):
+            w = np.sqrt(v * v - u * u)
+            return u * jv(l - 1, u) / jv(l, u) + w * kv(l - 1, w) / kv(l, w)
+
+        return wrapper
 
     @staticmethod
     def left_side_eigen_eq(l):
         def wrapper(u):
-            return u*jv(l-1, u)/jv(l, u)
+            return u * jv(l - 1, u) / jv(l, u)
+
         return wrapper
-        
+
     @staticmethod
     def right_side_eigen_eq(v, l):
         def wrapper(u):
-            w = np.sqrt(v*v - u*u)
-            return w*kv(l-1, w)/kv(l, w) 
+            w = np.sqrt(v * v - u * u)
+            return w * kv(l - 1, w) / kv(l, w)
 
     def find_max_jn_zeros(self, l):
         lo = 1
@@ -38,28 +38,26 @@ class WGFiber:
             if lo > 100:
                 raise ValueError("Too many points of Bessel zeros")
         maxn = lo
-        return maxn-1
-
+        return maxn - 1
 
     def get_init_points_to_solve(self, l):
         v = self.v
-        offset1 = 0.000001 # Don't change this value
+        offset1 = 0.000001  # Don't change this value
         offset2 = 0.5
         lhs_eq_at_v = WGFiber.left_side_eigen_eq(l)(v)
         maxn = self.find_max_jn_zeros(l)
-        if maxn == 0 :
+        if maxn == 0:
             if lhs_eq_at_v > 0:
                 return None
             else:
-                init_points = np.array(v-offset1)
+                init_points = np.array(v - offset1)
                 return init_points
         else:
             init_points = jn_zeros(l, maxn) - offset2
             if lhs_eq_at_v > 0:
                 return init_points
             else:
-                return np.append(init_points, v-offset1)
-
+                return np.append(init_points, v - offset1)
 
     def get_roots_for_u(self, l):
         init_points = self.get_init_points_to_solve(l)
@@ -80,40 +78,35 @@ class WGFiber:
             finally:
                 return roots
 
-
-
-    def get_all_u_set(self):
-        u_set = {}
+    def get_all_uset(self):
+        uset = {}
         l = 0
         roots = self.get_roots_for_u(l)
 
         while roots is not None:
-
             for m in range(np.size(roots)):
-                u_set[f"u{l}{m+1}"] = roots[m]
+                uset[f"u{l}{m+1}"] = roots[m]
 
             l += 1
             roots = self.get_roots_for_u(l)
-        return u_set
-
+        return uset
 
     def u_lm(self, l, m):
         if l < 0 or not isinstance(l, int):
             raise ValueError("'l' should be positive integers")
         if m < 1 or not isinstance(m, int):
-            raise ValueError("'m' should be positive integers") 
+            raise ValueError("'m' should be positive integers")
 
         try:
-            return self.u_set[f"u{l}{m}"]
+            return self.uset[f"u{l}{m}"]
         except KeyError as e:
             return None
 
-
     @staticmethod
     def get_lp_cutoff(l, m):
-        return jn_zeros(l-1, m)[-1]
-        
+        return jn_zeros(l - 1, m)[-1]
+
 
 if __name__ == "__main__":
     wgf = WGFiber(8.4174)
-    print(wgf.get_all_u_set())
+    print(wgf.get_all_uset())

@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 from .usolver import WGFiber 
 import numpy as np
 from scipy.special import jv, kv
