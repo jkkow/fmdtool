@@ -1,58 +1,56 @@
-from .usolver import WGFiber 
+from usolver import WGFiber
 import numpy as np
 from scipy.special import jv, kv
 
 
 class LPModes(WGFiber):
-    
     def __init__(self, v, dia_core):
         super().__init__(v)
         self.v = v  # V number
-        self.a = dia_core/2 # radius of core in micron 
+        self.a = dia_core / 2  # radius of core in micron
         self.mesh_size = 800
-
 
     def field_core_eq(self, l):
         a = self.a
-        def wrapper(u, r, phi):
-            return jv(l, u*r/a) * np.cos(l*phi)
-        return wrapper
 
+        def wrapper(u, r, phi):
+            return jv(l, u * r / a) * np.cos(l * phi)
+
+        return wrapper
 
     def field_clad_eq(self, l):
         v = self.v
         a = self.a
+
         def wrapper(u, r, phi):
-            w = np.sqrt(v*v - u*u)
-            return (jv(l, u)/kv(l, w))*kv(l, w*r/a) * np.cos(l*phi)
+            w = np.sqrt(v * v - u * u)
+            return (jv(l, u) / kv(l, w)) * kv(l, w * r / a) * np.cos(l * phi)
+
         return wrapper
 
-
     def mask_core(self, x, y):
-        return np.sqrt(x*x+y*y) <= self.a
-
+        return np.sqrt(x * x + y * y) <= self.a
 
     def mask_clad(self, x, y):
-        return np.sqrt(x*x+y*y) > self.a
-
+        return np.sqrt(x * x + y * y) > self.a
 
     def LP(self, l, m):
         a = self.a
 
-        xi = np.linspace(-1.5*a, 1.5*a, self.mesh_size)
-        x, y = np.meshgrid(xi, xi, indexing='xy')
+        xi = np.linspace(-1.5 * a, 1.5 * a, self.mesh_size)
+        x, y = np.meshgrid(xi, xi, indexing="xy")
 
         u = self.u_lm(l, m)  # Method of 'WGFiber'
-        r = np.sqrt(x*x + y*y)
+        r = np.sqrt(x * x + y * y)
         phi = np.arctan2(x, y)
 
         fcore = self.field_core_eq(l)
-        mfcore = self.mask_core(x,y) # returns core region 1, clad region 0.
-        e_field_core = fcore(u, r, phi)*mfcore
+        mfcore = self.mask_core(x, y)  # returns core region 1, clad region 0.
+        e_field_core = fcore(u, r, phi) * mfcore
 
         fclad = self.field_clad_eq(l)
-        mfclad = self.mask_clad(x,y) # returns core region 0, clad region 1.
-        e_field_clad = fclad(u, r, phi)*mfclad
+        mfclad = self.mask_clad(x, y)  # returns core region 0, clad region 1.
+        e_field_clad = fclad(u, r, phi) * mfclad
 
         mode_field = e_field_core + e_field_clad
         return mode_field
