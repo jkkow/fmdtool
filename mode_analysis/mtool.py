@@ -8,7 +8,7 @@ class LPModes(WGFiber):
         super().__init__(v)
         self.v = v  # V number
         self.a = dia_core / 2  # radius of core in micron
-        self.mesh_size = 800
+        self.mesh_size = 500
 
     def field_core_eq(self, l):
         a = self.a

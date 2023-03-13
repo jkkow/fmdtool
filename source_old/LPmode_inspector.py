@@ -87,7 +87,7 @@ class ModePursuer(object):
         Eyv = Ev_normal * np.sin(pol * np.pi / 180)
 
         description = "test temp"
-        return np.array([Ex, Ey, Exv, Eyv, description])
+        return np.array([Ex, Ey, Exv, Eyv, description], dtype='object')
 
     def ModePlot(self, modeObject, mode='I', field_vector='off'):
         Ex = modeObject[0]
