@@ -80,13 +80,13 @@ def test_get_roots_for_u():
     assert np.size(wgf.get_roots_for_u(l=5)) == 1
 
 
-def test_get_cutoff_value():
-    assert np.isclose(WGFiber.get_lp_cutoff(0, 1), 0.0)
-    assert np.isclose(WGFiber.get_lp_cutoff(1, 1), 2.404825557)
-    assert np.isclose(WGFiber.get_lp_cutoff(2, 1), 3.831705970)
-    assert np.isclose(WGFiber.get_lp_cutoff(0, 2), 3.831705970)
-    assert np.isclose(WGFiber.get_lp_cutoff(3, 1), 5.135622301)
-    assert np.isclose(WGFiber.get_lp_cutoff(1, 2), 5.520078110)
+def test_get_cutoff_LP():
+    assert np.isclose(WGFiber.get_cutoff_LP(0, 1), 0.0)
+    assert np.isclose(WGFiber.get_cutoff_LP(1, 1), 2.404825557)
+    assert np.isclose(WGFiber.get_cutoff_LP(2, 1), 3.831705970)
+    assert np.isclose(WGFiber.get_cutoff_LP(0, 2), 3.831705970)
+    assert np.isclose(WGFiber.get_cutoff_LP(3, 1), 5.135622301)
+    assert np.isclose(WGFiber.get_cutoff_LP(1, 2), 5.520078110)
 
 
 def test_get_all_uset():

@@ -6,6 +6,7 @@ from scipy.optimize import fsolve
 
 class WGFiber:
     """Class for Weakly Guiding Fiber"""
+
     def __init__(self, v):
         self.v = v
         self.uset = self.get_all_uset()
@@ -21,6 +22,7 @@ class WGFiber:
 
     @staticmethod
     def left_side_eigen_eq(l):
+        """for some checks, plottings"""
 
         def wrapper(u):
             return u * jv(l - 1, u) / jv(l, u)
@@ -29,20 +31,23 @@ class WGFiber:
 
     @staticmethod
     def right_side_eigen_eq(v, l):
+        """for some checks, plottings"""
 
         def wrapper(u):
             w = np.sqrt(v * v - u * u)
-            return w * kv(l - 1, w) / kv(l, w)
+            return -w * kv(l - 1, w) / kv(l, w)
 
         return wrapper
 
     def find_max_jn_zeros(self, l):
-        lo = 1
-        while jn_zeros(l, lo)[-1] < self.v:
-            lo += 1
-            if lo > 100:
+        """Find the number of points where a Bessel function
+        jv(l, u) has the value zero in a range u is less than V"""
+        nth = 1
+        while jn_zeros(l, nth)[-1] < self.v:
+            nth += 1
+            if nth > 100:
                 raise ValueError("Too many points of Bessel zeros")
-        maxn = lo
+        maxn = nth
         return maxn - 1
 
     def get_init_points_to_solve(self, l):
@@ -108,7 +113,7 @@ class WGFiber:
             return None
 
     @staticmethod
-    def get_lp_cutoff(l, m):
+    def get_cutoff_LP(l, m):
         if l < 0 or not isinstance(l, int):
             raise ValueError("'l' should be positive integers")
 
