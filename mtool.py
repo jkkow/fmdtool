@@ -14,7 +14,6 @@ class LPModes(WGFiber):
     def field_core_eq(self, l, u):
         def wrapper(r, phi):
             return jv(l, u * r / self.a) * np.cos(l * phi)
-
         return wrapper
 
     def field_clad_eq(self, l, u):
