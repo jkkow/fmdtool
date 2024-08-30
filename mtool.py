@@ -4,16 +4,17 @@ from scipy.special import jv, kv
 
 
 class LPModes(WGFiber):
-    def __init__(self, v, d):
+    def __init__(self, v, d, mesh_size=300):
         super().__init__(v)
         self.v = v  # V number
-        self.a = d/ 2  # radius of core in micron
-        self.mesh_size = 300
+        self.a = d / 2  # radius of core in micron
+        self.mesh_size = mesh_size  # mesh size for mode field points
         self.xi = np.linspace(-2 * self.a, 2 * self.a, self.mesh_size)
 
     def field_core_eq(self, l, u):
         def wrapper(r, phi):
             return jv(l, u * r / self.a) * np.cos(l * phi)
+
         return wrapper
 
     def field_clad_eq(self, l, u):
@@ -41,20 +42,24 @@ class LPModes(WGFiber):
         if u is not None:
             x, y = np.meshgrid(self.xi, self.xi, indexing="xy")
             r = np.sqrt(x * x + y * y)
-            phi = np.arctan2(x, y) - rot*np.pi/180 # unit of rot is degree
+            phi = np.arctan2(x, y) - rot * np.pi / 180  # unit of rot is degree
 
             fcore = self.field_core_eq(l, u)
-            mcore = self.mask_core(x, y)  # returns 1 for core region, 0 for clad region.
-            e_field_core = fcore(r, phi) * mcore
+            mask_core = self.mask_core(
+                x, y
+            )  # returns 1 for core region, 0 for clad region.
+            e_field_core = fcore(r, phi) * mask_core
 
             fclad = self.field_clad_eq(l, u)
-            mclad = self.mask_clad(x, y)  # returns 0 for core region, 1 for clad region.
-            e_field_clad = fclad(r, phi) * mclad
+            mask_clad = self.mask_clad(
+                x, y
+            )  # returns 0 for core region, 1 for clad region.
+            e_field_clad = fclad(r, phi) * mask_clad
 
             field = e_field_core + e_field_clad
             norm_field = field / np.sqrt(np.sum(field.real**2 + field.imag**2))
-            Ex = jones_vector[0]*norm_field
-            Ey = jones_vector[1]*norm_field
+            Ex = jones_vector[0] * norm_field
+            Ey = jones_vector[1] * norm_field
             return np.array([Ex, Ey])
         else:
             raise ValueError(f"LP{l}{m} mode doesn't exist at V={self.v}.")
