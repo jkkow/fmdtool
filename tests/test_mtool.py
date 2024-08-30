@@ -30,22 +30,22 @@ def test_field_eq():
 
 def test_LP_normalization():
     lps = LPModes(5, 10)
-    lp11 = lps.LP(1, 1)
-    lp21 = lps.LP(2, 1)
+    lp11 = lps.gen_mode_LP(1, 1)
+    lp21 = lps.gen_mode_LP(2, 1)
     assert np.isclose(np.sum(abs(lp11 * lp11)), 1.000)
     assert np.isclose(np.sum(abs(lp21 * lp21)), 1.000)
     assert np.isclose(np.sum(abs(lp21 * lp21)), np.sum(abs(lp11 * lp11)))
 
 
-def test_LP():
+def test_gen_mode_LP():
     lps = LPModes(3, 10)
     with pytest.raises(ValueError):
-        lps.LP(3,1)
+        lps.gen_mode_LP(3,1)
 
 
 def test_get_power():
     lps = LPModes(3, 10)
-    lp01 = lps.LP(0, 1)
-    lp11 = lps.LP(1, 1)
+    lp01 = lps.gen_mode_LP(0, 1)
+    lp11 = lps.gen_mode_LP(1, 1)
     assert np.isclose(lps.get_power(lp01), 1.0)
     assert np.isclose(lps.get_power(lp11), 1.0)

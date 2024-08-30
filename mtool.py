@@ -29,7 +29,7 @@ class LPModes(WGFiber):
     def mask_clad(self, x, y):
         return np.sqrt(x * x + y * y) > self.a
 
-    def LP(self, l, m, rot=0, jones=(1, 0)):
+    def gen_mode_LP(self, l, m, rot=0, jones=(1, 0)):
         # Returns complex wave function
         u = self.u_lm(l, m)  # Method of 'WGFiber'
 
