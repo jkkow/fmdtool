@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 from scipy.special import jn_zeros
-from ..usolver import WGFiber
+from ..lpsolver import WGFiber
 
 
 def test_find_max_jn_zeros():
