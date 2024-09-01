@@ -42,13 +42,13 @@ class WGFiber:
     def num_of_zeros_jn(self, l):
         """Find the number of points where a Bessel function
         jv(l, u) has the value zero in a range u is less than V"""
-        nth = 1
-        while jn_zeros(l, nth)[-1] < self.v:
-            nth += 1
-            if nth > 100:
+        count = 1
+        while jn_zeros(l, count)[-1] < self.v:
+            count += 1
+            if count > 100:
                 raise ValueError("Too many points of Bessel zeros")
-        maxn = nth
-        return maxn - 1
+        num = count - 1 
+        return num
 
     def get_init_points_to_solve(self, l):
         v = self.v
