@@ -39,7 +39,7 @@ class WGFiber:
 
         return wrapper
 
-    def find_max_jn_zeros(self, l):
+    def num_of_zeros_jn(self, l):
         """Find the number of points where a Bessel function
         jv(l, u) has the value zero in a range u is less than V"""
         nth = 1
@@ -55,7 +55,7 @@ class WGFiber:
         offset1 = 0.000001  # Don't change this value
         offset2 = 0.5
         lhs_eq_at_v = WGFiber.left_side_eigen_eq(l)(v)
-        maxn = self.find_max_jn_zeros(l)
+        maxn = self.num_of_zeros_jn(l)
         if maxn == 0:
             if lhs_eq_at_v > 0:
                 return None

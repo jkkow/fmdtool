@@ -4,19 +4,19 @@ from scipy.special import jn_zeros
 from ..lpsolver import WGFiber
 
 
-def test_find_max_jn_zeros():
+def test_num_of_zeros_jn():
     wgf = WGFiber(v=2.0)
-    assert wgf.find_max_jn_zeros(l=0) == 0
-    assert wgf.find_max_jn_zeros(l=1) == 0
+    assert wgf.num_of_zeros_jn(l=0) == 0
+    assert wgf.num_of_zeros_jn(l=1) == 0
 
     wgf = WGFiber(v=2.6)
-    assert wgf.find_max_jn_zeros(l=0) == 1
-    assert wgf.find_max_jn_zeros(l=1) == 0
+    assert wgf.num_of_zeros_jn(l=0) == 1
+    assert wgf.num_of_zeros_jn(l=1) == 0
 
     wgf = WGFiber(v=5.5)
-    assert wgf.find_max_jn_zeros(l=0) == 1
-    assert wgf.find_max_jn_zeros(l=1) == 1
-    assert wgf.find_max_jn_zeros(l=2) == 1
+    assert wgf.num_of_zeros_jn(l=0) == 1
+    assert wgf.num_of_zeros_jn(l=1) == 1
+    assert wgf.num_of_zeros_jn(l=2) == 1
 
 
 def test_get_init_points_to_solve():
