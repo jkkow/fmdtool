@@ -14,30 +14,30 @@ class WGFiber:
     def gen_eigen_eq(self, l):
         v = self.v
 
-        def wrapper(u):
+        def wrap(u):
             w = np.sqrt(v * v - u * u)
             return u * jv(l - 1, u) / jv(l, u) + w * kv(l - 1, w) / kv(l, w)
 
-        return wrapper
+        return wrap
 
     @staticmethod
     def left_side_eigen_eq(l):
         """for some checks, plottings"""
 
-        def wrapper(u):
+        def wrap(u):
             return u * jv(l - 1, u) / jv(l, u)
 
-        return wrapper
+        return wrap
 
     @staticmethod
     def right_side_eigen_eq(v, l):
         """for some checks, plottings"""
 
-        def wrapper(u):
+        def wrap(u):
             w = np.sqrt(v * v - u * u)
             return -w * kv(l - 1, w) / kv(l, w)
 
-        return wrapper
+        return wrap
 
     def num_of_zeros_jn(self, l):
         """Find the number of points where a Bessel function
