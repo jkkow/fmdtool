@@ -1,4 +1,4 @@
-from .usolver import WGFiber
+from .lpsolver import WGFiber
 import numpy as np
 from scipy.special import jv, kv
 
